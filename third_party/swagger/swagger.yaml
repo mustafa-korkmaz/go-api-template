@@ -1,0 +1,51 @@
+consumes:
+- application/json
+definitions:
+  HealthCheckResp:
+    properties:
+      result:
+        properties:
+          value:
+            type: string
+            x-go-name: Value
+        type: object
+        x-go-name: Result
+    title: HealthCheckResp represents body of HealthCheck response.
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport
+host: localhost:1907
+info:
+  contact:
+    email: m.korkmaz@outlook.com
+    name: Mustafa Korkmaz
+  description: API Docs Go api boilerplate v1
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  version: 2.0.0
+paths:
+  /healthcheck:
+    get:
+      operationId: healthcheck
+      responses:
+        "200":
+          $ref: '#/responses/healthcheckResponse'
+      summary: healthcheck checks if the api is alive.
+produces:
+- application/json
+responses:
+  healthcheckResponse:
+    description: This text will appear as description of your response body.
+    schema:
+      $ref: '#/definitions/HealthCheckResp'
+schemes:
+- http
+security:
+- bearer:
+  - '[]'
+securityDefinitions:
+  bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
