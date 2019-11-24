@@ -1,6 +1,19 @@
 consumes:
 - application/json
 definitions:
+  APIResponse:
+    description: APIResponse represents base response
+    properties:
+      code:
+        $ref: '#/definitions/ResponseCodeType'
+      data:
+        type: object
+        x-go-name: Data
+      message:
+        type: string
+        x-go-name: Message
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/model
   HealthCheckReq:
     properties:
       value:
@@ -9,18 +22,11 @@ definitions:
     title: HealthCheckReq represents body of HealthCheck request.
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport
-  HealthCheckResp:
-    properties:
-      result:
-        properties:
-          value:
-            type: string
-            x-go-name: Value
-        type: object
-        x-go-name: Result
-    title: HealthCheckResp represents body of HealthCheck response.
-    type: object
-    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport
+  ResponseCodeType:
+    description: ResponseCodeType represents enum type for response code
+    format: int64
+    type: integer
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/enums
 host: localhost:1907
 info:
   contact:
@@ -69,7 +75,7 @@ responses:
   healthcheckResponse:
     description: Healthcheck response body.
     schema:
-      $ref: '#/definitions/HealthCheckResp'
+      $ref: '#/definitions/APIResponse'
 schemes:
 - http
 security:

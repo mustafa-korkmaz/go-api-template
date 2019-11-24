@@ -5,7 +5,7 @@ database:
 
 server:
   port: :80
-  debug: true
+  debug: false
   read_timeout_seconds: 10
   write_timeout_seconds: 5
 

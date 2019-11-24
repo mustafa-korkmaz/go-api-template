@@ -1,6 +1,9 @@
 package swaggermeta
 
-import "github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
+import (
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
+)
 
 // swagger:route GET /v1/healthcheck/{value} healthcheck healthcheckGet
 // healthcheck checks if the api is alive.
@@ -16,7 +19,7 @@ import "github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
 // swagger:response healthcheckResponse
 type healthcheckResponseWrapper struct {
 	// in:body
-	Body transport.HealthCheckResp
+	Body model.APIResponse
 }
 
 // swagger:parameters healthcheckPost
