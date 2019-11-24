@@ -16,20 +16,38 @@ type HTTP struct {
 // NewHTTP creates new healthcheck http service
 func NewHTTP(svc healthcheck.Service, er *echo.Group) {
 	h := HTTP{svc}
-	pr := er.Group("/healthcheck")
+	hr := er.Group("/healthcheck")
 
-	pr.GET("/", h.get)
+	hr.GET("/:value", h.get)
+	hr.POST("", h.post)
 }
 
 func (h *HTTP) get(c echo.Context) error {
 
-	p := new(HealthCheckReq)
-	if err := h.svc.Get(p.Value); err != nil {
+	val := c.Param("value")
+
+	if err := h.svc.Get(val); err != nil {
 		return err
 	}
 
 	var resp = HealthCheckResp{}
-	resp.Result.Value = p.Value
+	resp.Result.Value = val
+	return c.JSON(http.StatusOK, resp)
+}
+
+func (h *HTTP) post(c echo.Context) error {
+
+	req := HealthCheckReq{}
+	if err := c.Bind(&req); err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if err := h.svc.Post(req.Value); err != nil {
+		return err
+	}
+
+	var resp = HealthCheckResp{}
+	resp.Result.Value = req.Value
 	return c.JSON(http.StatusOK, resp)
 }
 

@@ -1,6 +1,8 @@
 package api
 
 import (
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck"
+	hct "github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/config"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/server"
 )
@@ -22,11 +24,13 @@ func Start(cfg *config.Configuration) error {
 
 	//at.NewHTTP(al.New(auth.Initialize(db, jwt, sec, rbac), log), e, jwt.MWFunc())
 
-	// v1 := e.Group("/v1")
+	v1 := e.Group("/v1")
 	// v1.Use(jwt.MWFunc())
 
 	// ut.NewHTTP(ul.New(user.Initialize(db, rbac, sec), log), v1)
 	// pt.NewHTTP(pl.New(password.Initialize(db, rbac, sec), log), v1)
+
+	hct.NewHTTP(healthcheck.New(), v1)
 
 	server.Start(e, &server.Config{
 		Port:                cfg.Server.Port,

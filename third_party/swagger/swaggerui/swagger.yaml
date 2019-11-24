@@ -1,6 +1,14 @@
 consumes:
 - application/json
 definitions:
+  HealthCheckReq:
+    properties:
+      value:
+        type: string
+        x-go-name: Value
+    title: HealthCheckReq represents body of HealthCheck request.
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport
   HealthCheckResp:
     properties:
       result:
@@ -22,20 +30,44 @@ info:
   license:
     name: MIT
     url: http://opensource.org/licenses/MIT
-  version: 2.0.0
+  version: 1.0.0
 paths:
-  /healthcheck:
-    get:
-      operationId: healthcheck
+  /v1/healthcheck:
+    post:
+      operationId: healthcheckPost
+      parameters:
+      - description: Healthcheck POST request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/HealthCheckReq'
       responses:
         "200":
           $ref: '#/responses/healthcheckResponse'
       summary: healthcheck checks if the api is alive.
+      tags:
+      - healthcheck
+  /v1/healthcheck/{value}:
+    get:
+      operationId: healthcheckGet
+      parameters:
+      - description: Healthcheck GET request path.
+        in: path
+        name: value
+        required: true
+        type: string
+        x-go-name: Value
+      responses:
+        "200":
+          $ref: '#/responses/healthcheckResponse'
+      summary: healthcheck checks if the api is alive.
+      tags:
+      - healthcheck
 produces:
 - application/json
 responses:
   healthcheckResponse:
-    description: This text will appear as description of your response body.
+    description: Healthcheck response body.
     schema:
       $ref: '#/definitions/HealthCheckResp'
 schemes:

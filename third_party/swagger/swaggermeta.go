@@ -1,7 +1,7 @@
 // API Docs Go api boilerplate v1
 //
 //     Schemes: http
-//     Version: 2.0.0
+//     Version: 1.0.0
 //     License: MIT http://opensource.org/licenses/MIT
 //     Contact: Mustafa Korkmaz <m.korkmaz@outlook.com>
 //     Host: localhost:1907
