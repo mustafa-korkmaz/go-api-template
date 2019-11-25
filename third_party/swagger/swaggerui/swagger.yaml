@@ -22,11 +22,27 @@ definitions:
     title: HealthCheckReq represents body of HealthCheck request.
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport
+  PagedListRequest:
+    description: PagedListRequest represents listing conditions for paginated items
+    properties:
+      include_records_total:
+        type: boolean
+        x-go-name: IncludeRecordsTotal
+      length:
+        format: int64
+        type: integer
+        x-go-name: Length
+      start:
+        format: int64
+        type: integer
+        x-go-name: Start
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/model
   ResponseCodeType:
     description: ResponseCodeType represents enum type for response code
     format: int64
     type: integer
-    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/enums
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/enum
 host: localhost:1907
 info:
   contact:
@@ -49,7 +65,7 @@ paths:
           $ref: '#/definitions/HealthCheckReq'
       responses:
         "200":
-          $ref: '#/responses/healthcheckResponse'
+          $ref: '#/responses/genericResponse'
       summary: healthcheck checks if the api is alive.
       tags:
       - healthcheck
@@ -65,15 +81,29 @@ paths:
         x-go-name: Value
       responses:
         "200":
-          $ref: '#/responses/healthcheckResponse'
+          $ref: '#/responses/genericResponse'
       summary: healthcheck checks if the api is alive.
+      tags:
+      - healthcheck
+  /v1/healthcheck/paginationtest:
+    post:
+      operationId: pagedListRequest
+      parameters:
+      - in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/PagedListRequest'
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      summary: paginationtest returns a sample list for pagination parameters.
       tags:
       - healthcheck
 produces:
 - application/json
 responses:
-  healthcheckResponse:
-    description: Healthcheck response body.
+  genericResponse:
+    description: api generic response body.
     schema:
       $ref: '#/definitions/APIResponse'
 schemes:

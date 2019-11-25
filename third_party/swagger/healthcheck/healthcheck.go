@@ -2,25 +2,22 @@ package swaggermeta
 
 import (
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
 )
 
 // swagger:route GET /v1/healthcheck/{value} healthcheck healthcheckGet
 // healthcheck checks if the api is alive.
 // responses:
-//   200: healthcheckResponse
+//   200: genericResponse
+
+// swagger:route POST /v1/healthcheck/paginationtest healthcheck pagedListRequest
+// paginationtest returns a sample list for pagination parameters.
+// responses:
+//   200: genericResponse
 
 // swagger:route POST /v1/healthcheck healthcheck healthcheckPost
 // healthcheck checks if the api is alive.
 // responses:
-//   200: healthcheckResponse
-
-// Healthcheck response body.
-// swagger:response healthcheckResponse
-type healthcheckResponseWrapper struct {
-	// in:body
-	Body model.APIResponse
-}
+//   200: genericResponse
 
 // swagger:parameters healthcheckPost
 type healthcheckPostRequestWrapper struct {

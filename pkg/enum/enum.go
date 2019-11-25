@@ -1,4 +1,4 @@
-package enums
+package enum
 
 // ResponseCodeType represents enum type for response code
 type ResponseCodeType int

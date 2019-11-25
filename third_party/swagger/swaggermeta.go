@@ -23,3 +23,21 @@
 //
 // swagger:meta
 package swaggermeta
+
+import (
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
+)
+
+// api generic response body.
+// swagger:response genericResponse
+type genericResponseWrapper struct {
+	// in:body
+	Body model.APIResponse
+}
+
+// api pagedList request body.
+// swagger:parameters pagedListRequest
+type pagedListRequestWrapper struct {
+	// in:body
+	Body model.PagedListRequest
+}
