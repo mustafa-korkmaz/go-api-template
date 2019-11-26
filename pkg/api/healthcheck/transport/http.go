@@ -15,14 +15,19 @@ type HTTP struct {
 	svc healthcheck.Service
 }
 
-// NewHTTP creates new healthcheck http service
-func NewHTTP(svc healthcheck.Service, er *echo.Group) {
+// NewHTTP creates new healthcheck http service with valid api versions
+func NewHTTP(svc healthcheck.Service, groups ...*echo.Group) {
 	h := HTTP{svc}
-	hr := er.Group("/healthcheck")
+	v1 := groups[0].Group("/healthcheck")
+	v2 := groups[1].Group("/healthcheck")
 
-	hr.GET("/:value", h.get)
-	hr.POST("/paginationtest", h.getPagedList)
-	hr.POST("", h.post)
+	//define /V1/healtcheck methods
+	v1.GET("/:value", h.get)
+	v1.POST("/paginationtest", h.getPagedList)
+	v1.POST("", h.post)
+
+	//define /V2/healtcheck methods
+	v2.GET("/:value", h.getV2)
 }
 
 func (h *HTTP) get(c echo.Context) error {
@@ -89,6 +94,29 @@ func (h *HTTP) post(c echo.Context) error {
 	}{
 		[]string{"iPhone", "Samsung", "Huawei"},
 		req.Value,
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+func (h *HTTP) getV2(c echo.Context) error {
+
+	val := c.Param("value")
+	val = "Your V2 value is: " + val
+
+	if err := h.svc.Get(val); err != nil {
+		return err
+	}
+
+	var resp = model.APIResponse{}
+	resp.Code = enum.ResponseCode.Success
+
+	resp.Data = struct {
+		AwesomeCars []string `json:"awesome_cars"`
+		Value       string   `json:"value"`
+	}{
+		[]string{"VW", "Jaguar", "Tesla"},
+		val,
 	}
 
 	return c.JSON(http.StatusOK, resp)

@@ -60,9 +60,10 @@ paths:
       parameters:
       - description: Healthcheck POST request body.
         in: body
-        name: Body
+        name: body
         schema:
           $ref: '#/definitions/HealthCheckReq'
+        x-go-name: Body
       responses:
         "200":
           $ref: '#/responses/genericResponse'
@@ -87,16 +88,34 @@ paths:
       - healthcheck
   /v1/healthcheck/paginationtest:
     post:
-      operationId: pagedListRequest
+      operationId: paginationtest
       parameters:
-      - in: body
-        name: Body
+      - description: api pagedList request body.
+        in: body
+        name: body
         schema:
           $ref: '#/definitions/PagedListRequest'
+        x-go-name: Body
       responses:
         "200":
           $ref: '#/responses/genericResponse'
-      summary: paginationtest returns a sample list for pagination parameters.
+      summary: Returns a sample list for pagination parameters.
+      tags:
+      - healthcheck
+  /v2/healthcheck/{value}:
+    get:
+      operationId: healthcheckGetV2
+      parameters:
+      - description: HealthcheckV2 GET request path.
+        in: path
+        name: value
+        required: true
+        type: string
+        x-go-name: Value
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      summary: healthcheck checks if the api version 2 is alive.
       tags:
       - healthcheck
 produces:

@@ -34,10 +34,3 @@ type genericResponseWrapper struct {
 	// in:body
 	Body model.APIResponse
 }
-
-// api pagedList request body.
-// swagger:parameters pagedListRequest
-type pagedListRequestWrapper struct {
-	// in:body
-	Body model.PagedListRequest
-}
