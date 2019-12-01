@@ -38,11 +38,38 @@ definitions:
         x-go-name: Start
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/model
+  PagedListResponse:
+    description: PagedListResponse represents a list of paginated items and total
+      item count for the storage
+    properties:
+      items:
+        items:
+          type: object
+        type: array
+        x-go-name: Items
+      records_total:
+        format: int64
+        type: integer
+        x-go-name: RecordsTotal
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/model
   ResponseCodeType:
     description: ResponseCodeType represents enum type for response code
     format: int64
     type: integer
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/enum
+  genericPagedListResponse:
+    properties:
+      code:
+        $ref: '#/definitions/ResponseCodeType'
+      data:
+        $ref: '#/definitions/PagedListResponse'
+      message:
+        type: string
+        x-go-name: Message
+    title: api generic response body including pagedList.
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger
 host: localhost:1907
 info:
   contact:
@@ -98,10 +125,35 @@ paths:
         x-go-name: Body
       responses:
         "200":
-          $ref: '#/responses/genericResponse'
+          $ref: '#/responses/genericPagedListResponse'
       summary: Returns a sample list for pagination parameters.
       tags:
       - healthcheck
+  /v1/olive/{id}:
+    get:
+      operationId: oliveGet
+      parameters:
+      - description: Healthcheck GET request path.
+        in: path
+        name: id
+        required: true
+        type: string
+        x-go-name: ID
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      summary: Returns olive details with given id.
+      tags:
+      - olive
+  /v1/olive/count:
+    get:
+      description: Returns olive count stored so far
+      operationId: oliveCount
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      tags:
+      - olive
   /v2/healthcheck/{value}:
     get:
       operationId: healthcheckGetV2
@@ -121,6 +173,10 @@ paths:
 produces:
 - application/json
 responses:
+  genericPagedListResponse:
+    description: api generic response body including pagedList.
+    schema:
+      $ref: '#/definitions/genericPagedListResponse'
   genericResponse:
     description: api generic response body.
     schema:

@@ -3,6 +3,8 @@ package api
 import (
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck"
 	hct "github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/olive"
+	ot "github.com/mustafa-korkmaz/goapitemplate/pkg/api/olive/transport"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/config"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/server"
 )
@@ -33,6 +35,7 @@ func Start(cfg *config.Configuration) error {
 	// pt.NewHTTP(pl.New(password.Initialize(db, rbac, sec), log), v1)
 
 	hct.NewHTTP(healthcheck.New(), v1, v2)
+	ot.NewHTTP(olive.New(), v1)
 
 	server.Start(e, &server.Config{
 		Port:                cfg.Server.Port,

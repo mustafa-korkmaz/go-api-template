@@ -1,4 +1,4 @@
-package model
+package viewmodel
 
 //PagedListRequest represents listing conditions for paginated items
 type PagedListRequest struct {

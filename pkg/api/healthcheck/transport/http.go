@@ -7,7 +7,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel"
 )
 
 // HTTP represents healthcheck http transport service
@@ -38,7 +38,7 @@ func (h *HTTP) get(c echo.Context) error {
 		return err
 	}
 
-	var resp = model.APIResponse{}
+	var resp = viewmodel.APIResponse{}
 	resp.Code = enum.ResponseCode.Success
 
 	resp.Data = struct {
@@ -54,12 +54,12 @@ func (h *HTTP) get(c echo.Context) error {
 
 func (h *HTTP) getPagedList(c echo.Context) error {
 
-	req := model.PagedListRequest{}
+	req := viewmodel.PagedListRequest{}
 	if err := c.Bind(&req); err != nil {
 		return echo.ErrBadRequest
 	}
 
-	var resp = model.APIResponse{}
+	var resp = viewmodel.APIResponse{}
 	resp.Code = enum.ResponseCode.Success
 
 	var pagedListResp, err = h.svc.GetPagedList(req)
@@ -84,7 +84,7 @@ func (h *HTTP) post(c echo.Context) error {
 		return err
 	}
 
-	var resp = model.APIResponse{}
+	var resp = viewmodel.APIResponse{}
 
 	resp.Code = enum.ResponseCode.Success
 
@@ -108,7 +108,7 @@ func (h *HTTP) getV2(c echo.Context) error {
 		return err
 	}
 
-	var resp = model.APIResponse{}
+	var resp = viewmodel.APIResponse{}
 	resp.Code = enum.ResponseCode.Success
 
 	resp.Data = struct {

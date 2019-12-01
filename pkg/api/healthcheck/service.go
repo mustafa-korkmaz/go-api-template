@@ -1,13 +1,14 @@
 package healthcheck
 
 import (
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel"
 )
 
 // Service represents healthcheck application interface
 type Service interface {
 	Get(string) error
-	GetPagedList(model.PagedListRequest) (model.PagedListResponse, error)
+	GetPagedList(viewmodel.PagedListRequest) (viewmodel.APIResponse, error)
 	Post(string) error
 }
 
@@ -28,10 +29,10 @@ func (hc *HealthCheck) Post(value string) error {
 }
 
 //GetPagedList returns a new pagedListResponse by the given criterias
-func (hc *HealthCheck) GetPagedList(req model.PagedListRequest) (model.PagedListResponse, error) {
+func (hc *HealthCheck) GetPagedList(req viewmodel.PagedListRequest) (viewmodel.APIResponse, error) {
 	var numbers = [10]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-	var resp = model.PagedListResponse{
+	var resp = viewmodel.PagedListResponse{
 		RecordsTotal: req.Length,
 		Items:        make([]interface{}, len(numbers)),
 	}
@@ -39,7 +40,13 @@ func (hc *HealthCheck) GetPagedList(req model.PagedListRequest) (model.PagedList
 	for i, n := range numbers {
 		resp.Items[i] = n
 	}
-	return resp, nil
+
+	var apiResp = viewmodel.APIResponse{
+		Code: enum.ResponseCode.Success,
+		Data: resp,
+	}
+
+	return apiResp, nil
 }
 
 // New creates new healthCheck application service

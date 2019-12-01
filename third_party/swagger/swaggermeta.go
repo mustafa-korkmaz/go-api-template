@@ -25,12 +25,28 @@
 package swaggermeta
 
 import (
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel"
 )
 
 // api generic response body.
 // swagger:response genericResponse
 type genericResponseWrapper struct {
 	// in:body
-	Body model.APIResponse
+	Body viewmodel.APIResponse
+}
+
+// api generic response body including pagedList.
+type genericPagedListResponse struct {
+	// in:body
+	Code    enum.ResponseCodeType       `json:"code"`
+	Message string                      `json:"message"`
+	Data    viewmodel.PagedListResponse `json:"data"`
+}
+
+// api generic response body including pagedList.
+// swagger:response genericPagedListResponse
+type genericPagedListResponseWrapper struct {
+	// in:body
+	Body genericPagedListResponse `json:"body"`
 }

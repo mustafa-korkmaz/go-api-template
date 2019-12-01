@@ -8,7 +8,7 @@ import (
 // swagger:route POST /v1/healthcheck/paginationtest healthcheck paginationtest
 // Returns a sample list for pagination parameters.
 // responses:
-//   200: genericResponse
+//   200: genericPagedListResponse
 // swagger:parameters paginationtest
 type pagedListRequestWrapper struct {
 	// api pagedList request body.
