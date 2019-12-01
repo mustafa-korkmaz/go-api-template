@@ -5,16 +5,18 @@ import (
 	hct "github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/olive"
 	ot "github.com/mustafa-korkmaz/goapitemplate/pkg/api/olive/transport"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/config"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/server"
 )
 
 // Start starts the API service
 func Start(cfg *config.Configuration) error {
-	// db, err := postgres.New(cfg.Db.Conn, cfg.Db.Timeout, cfg.Db.LogQueries)
-	// if err != nil {
-	// 	return err
-	// }
+
+	dbClient, err := mongodb.New(cfg.Db.Conn, cfg.Db.Timeout, cfg.Db.LogQueries)
+	if err != nil {
+		return err
+	}
 
 	// sec := secure.New(cfg.App.MinPasswordStr, sha1.New())
 	// rbac := rbac.New()
@@ -35,7 +37,7 @@ func Start(cfg *config.Configuration) error {
 	// pt.NewHTTP(pl.New(password.Initialize(db, rbac, sec), log), v1)
 
 	hct.NewHTTP(healthcheck.New(), v1, v2)
-	ot.NewHTTP(olive.New(), v1)
+	ot.NewHTTP(olive.New(dbClient, cfg.Db.Name), v1)
 
 	server.Start(e, &server.Config{
 		Port:                cfg.Server.Port,

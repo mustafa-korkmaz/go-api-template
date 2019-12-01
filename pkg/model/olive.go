@@ -6,3 +6,7 @@ type Olive struct {
 	Kind    string `json:"kind"`
 	Country string `json:"country"`
 }
+
+func (o Olive) ekmek() {
+
+}

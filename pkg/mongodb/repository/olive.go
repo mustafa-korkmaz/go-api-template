@@ -6,19 +6,19 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// OliveService represents olive collection operations interface
-type OliveService interface {
+// OliveRepository represents olive collection operations interface
+type OliveRepository interface {
+	MongoBaseRepository
 	GetOlivesCount() (int64, error)
 }
 
-// OliveRepository respresents the struct for mongo db base operations
-type OliveRepository struct {
-	MongoBaseRepository
-	ekmek string
+// Olive respresents the struct for mongo db operations for olive collection
+type Olive struct {
+	MongoBase
 }
 
 //GetOlivesCount returns the document count for olive collection
-func (repository *OliveRepository) GetOlivesCount() (int64, error) {
+func (repository *Olive) GetOlivesCount() (int64, error) {
 	collection := repository.client.Database(repository.DBName).Collection(repository.CollectionName)
 
 	var docCount, err = collection.CountDocuments(context.TODO(), bson.D{})

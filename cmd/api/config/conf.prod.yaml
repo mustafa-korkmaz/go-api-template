@@ -1,7 +1,8 @@
 database:
   log_queries: false
   timeout_seconds: 5
-  psn: postgres://dwztilqv:bSZUkp9kaxxG42acIdbwFX9VakRo3AtO@rogue.db.elephantsql.com:5432/dwztilqv
+  conn: mongodb://localhost:27017
+  name: mute
 
 server:
   port: :80

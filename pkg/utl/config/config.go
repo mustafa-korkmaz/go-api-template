@@ -17,7 +17,8 @@ type Configuration struct {
 
 // Database holds data necessery for database configuration
 type Database struct {
-	Conn       string `yaml:"psn,omitempty"`
+	Name       string `yaml:"name,omitempty"`
+	Conn       string `yaml:"conn,omitempty"`
 	LogQueries bool   `yaml:"log_queries,omitempty"`
 	Timeout    int    `yaml:"timeout_seconds,omitempty"`
 }
