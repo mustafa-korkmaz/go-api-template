@@ -4,7 +4,10 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
+
+const oliveCollectionName = "olives"
 
 // OliveRepository represents olive collection operations interface
 type OliveRepository interface {
@@ -28,4 +31,14 @@ func (repository *Olive) GetOlivesCount() (int64, error) {
 	}
 
 	return docCount, nil
+}
+
+//New creates a new olive repository object
+func New(c *mongo.Client, dbName string) OliveRepository {
+	var repository = Olive{}
+	repository.CollectionName = oliveCollectionName
+	repository.DBName = dbName
+	repository.MongoBase.client = c
+
+	return &repository
 }

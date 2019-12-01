@@ -26,6 +26,7 @@ func (o *Olive) Get(id string) viewmodel.APIResponse {
 
 	var apiResp = viewmodel.APIResponse{
 		Code: enum.ResponseCode.Fail,
+		Data: nil,
 	}
 
 	var olive model.Olive
@@ -38,25 +39,34 @@ func (o *Olive) Get(id string) viewmodel.APIResponse {
 		return apiResp
 	}
 
-	apiResp.Code = enum.ResponseCode.Success
-
 	apiResp.Data = viewmodel.Olive{
-		Country: "Turkey",
-		Kind:    "Gemlik",
+		Country: olive.Country,
+		Kind:    olive.Kind,
+		ID:      olive.ID.Hex(),
 	}
 
+	apiResp.Code = enum.ResponseCode.Success
 	return apiResp
 }
 
 // Count returns the total olive count
 func (o *Olive) Count() viewmodel.APIResponse {
 
-	var resp = viewmodel.APIResponse{
-		Code: enum.ResponseCode.Success,
-		Data: 15550,
+	var apiResp = viewmodel.APIResponse{
+		Code: enum.ResponseCode.Fail,
 	}
 
-	return resp
+	var count, err = o.repository.GetOlivesCount()
+
+	if err != nil {
+		apiResp.Message = "olives cannot found"
+		return apiResp
+	}
+
+	apiResp.Data = count
+
+	apiResp.Code = enum.ResponseCode.Success
+	return apiResp
 }
 
 // New creates new olive api service

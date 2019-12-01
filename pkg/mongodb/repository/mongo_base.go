@@ -26,8 +26,13 @@ type MongoBase struct {
 //FindOne gets the result by ObjectId
 func (repository *MongoBase) FindOne(objectID string) *mongo.SingleResult {
 
-	doc := bson.D{primitive.E{Key: "_id", Value: objectID}}
-	collection := repository.client.Database(repository.DBName).Collection(repository.CollectionName)
+	collectionName := repository.CollectionName
+	db := repository.DBName
+
+	collection := repository.client.Database(db).Collection(collectionName)
+
+	objID, _ := primitive.ObjectIDFromHex(objectID)
+	doc := bson.D{primitive.E{Key: "_id", Value: objID}}
 
 	return collection.FindOne(context.TODO(), doc)
 }
