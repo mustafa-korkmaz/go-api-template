@@ -7,7 +7,7 @@ import (
 
 //Service represents unit of work interface
 type Service interface {
-	OliveRepository() o.Repository
-	OliveOilRepository() oo.Repository
+	OliveRepository() *o.Olive
+	OliveOilRepository() *oo.OliveOil
 	Save() error
 }

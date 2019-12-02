@@ -22,8 +22,8 @@ type OliveOil struct {
 }
 
 //GetOliveOilAmount returns the total amount of oils
-func (repository *OliveOil) GetOliveOilAmount() (float32, error) {
-	collection := repository.GetCollection()
+func (oo *OliveOil) GetOliveOilAmount() (float32, error) {
+	collection := oo.GetCollection()
 
 	//todo some stuff for calculating total amount of oliveOils
 
@@ -38,10 +38,10 @@ func (repository *OliveOil) GetOliveOilAmount() (float32, error) {
 
 //New creates a new olive repository object
 func New(c *mongo.Client, dbName string) *OliveOil {
-	var repository = OliveOil{}
-	repository.CollectionName = oliveOilsCollectionName
-	repository.DBName = dbName
-	repository.MongoBase.SetClient(c)
+	var oliveOil = OliveOil{}
+	oliveOil.CollectionName = oliveOilsCollectionName
+	oliveOil.DBName = dbName
+	oliveOil.MongoBase.SetClient(c)
 
-	return &repository
+	return &oliveOil
 }

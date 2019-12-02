@@ -22,8 +22,8 @@ type Olive struct {
 }
 
 //GetOlivesCount returns the document count for olive collection
-func (repository *Olive) GetOlivesCount() (int64, error) {
-	collection := repository.GetCollection()
+func (o *Olive) GetOlivesCount() (int64, error) {
+	collection := o.GetCollection()
 
 	var docCount, err = collection.CountDocuments(context.TODO(), bson.D{})
 
@@ -36,10 +36,10 @@ func (repository *Olive) GetOlivesCount() (int64, error) {
 
 //New creates a new olive repository object
 func New(c *mongo.Client, dbName string) *Olive {
-	var repository = Olive{}
-	repository.CollectionName = oliveCollectionName
-	repository.DBName = dbName
-	repository.SetClient(c)
+	var olive = Olive{}
+	olive.CollectionName = oliveCollectionName
+	olive.DBName = dbName
+	olive.SetClient(c)
 
-	return &repository
+	return &olive
 }
