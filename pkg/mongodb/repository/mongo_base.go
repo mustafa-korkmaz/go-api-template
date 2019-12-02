@@ -1,4 +1,4 @@
-package repository
+package mongodb
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// MongoBaseRepository represents mongo db base operations interface
-type MongoBaseRepository interface {
+// Repository represents mongo db base operations interface
+type Repository interface {
 	FindOne(objectID string) *mongo.SingleResult
 	// Insert(entity string)
 	// Update(entity string)
@@ -36,3 +36,20 @@ func (repository *MongoBase) FindOne(objectID string) *mongo.SingleResult {
 
 	return collection.FindOne(context.TODO(), doc)
 }
+
+//GetCollection returns the mongoDb collection reference
+func (repository *MongoBase) GetCollection() *mongo.Collection {
+	return repository.client.Database(repository.DBName).Collection(repository.CollectionName)
+}
+
+//SetClient sets the mongoDb client reference
+func (repository *MongoBase) SetClient(c *mongo.Client) {
+	repository.client = c
+}
+
+//we may consider exporting mongoClient
+
+//GetClient returns the mongoDb client reference
+// func (repository *MongoBase) GetClient() *mongo.Client {
+// 	return repository.client
+// }

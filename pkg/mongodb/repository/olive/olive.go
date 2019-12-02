@@ -3,26 +3,27 @@ package repository
 import (
 	"context"
 
+	mongodb "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const oliveCollectionName = "olives"
 
-// OliveRepository represents olive collection operations interface
-type OliveRepository interface {
-	MongoBaseRepository
+// Repository represents olive collection operations interface
+type Repository interface {
+	mongodb.Repository
 	GetOlivesCount() (int64, error)
 }
 
 // Olive respresents the struct for mongo db operations for olive collection
 type Olive struct {
-	MongoBase
+	mongodb.MongoBase
 }
 
 //GetOlivesCount returns the document count for olive collection
 func (repository *Olive) GetOlivesCount() (int64, error) {
-	collection := repository.client.Database(repository.DBName).Collection(repository.CollectionName)
+	collection := repository.GetCollection()
 
 	var docCount, err = collection.CountDocuments(context.TODO(), bson.D{})
 
@@ -34,11 +35,11 @@ func (repository *Olive) GetOlivesCount() (int64, error) {
 }
 
 //New creates a new olive repository object
-func New(c *mongo.Client, dbName string) OliveRepository {
+func New(c *mongo.Client, dbName string) *Olive {
 	var repository = Olive{}
 	repository.CollectionName = oliveCollectionName
 	repository.DBName = dbName
-	repository.MongoBase.client = c
+	repository.SetClient(c)
 
 	return &repository
 }

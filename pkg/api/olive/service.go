@@ -3,7 +3,7 @@ package olive
 import (
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository"
+	o "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository/olive"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/uow"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -17,8 +17,8 @@ type Service interface {
 
 // Olive represents olive api service
 type Olive struct {
-	uow        *uow.Uow
-	repository repository.OliveRepository
+	uow        uow.Service
+	repository o.Repository
 }
 
 // Get returns the olive detais
