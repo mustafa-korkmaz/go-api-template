@@ -15,9 +15,15 @@ type Service interface {
 	Count() viewmodel.APIResponse
 }
 
+//Uow represents olive service unit of work
+type Uow interface {
+	Save() error
+	//begin transaction
+}
+
 // Olive represents olive api service
 type Olive struct {
-	uow        uow.Service
+	uow        Uow
 	repository o.Repository
 }
 
@@ -72,10 +78,11 @@ func (o *Olive) Count() viewmodel.APIResponse {
 // New creates new olive api service
 func New(client *mongo.Client, dbName string) *Olive {
 
-	var olive = Olive{}
+	var uow = uow.New(client, dbName)
 
-	olive.uow = uow.New(client, dbName)
-	olive.repository = olive.uow.OliveRepository()
+	var olive = Olive{}
+	olive.repository = uow.OliveRepository()
+	olive.uow = uow
 
 	return &olive
 }
