@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
@@ -39,23 +40,19 @@ type Service struct {
 func (j *Service) MWFunc() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			token, err := j.ParseToken(c)
-			if err != nil || !token.Valid {
+			token := j.ParseToken(c)
+			if token == nil || !token.Valid {
 				return c.NoContent(http.StatusUnauthorized)
 			}
 
 			claims := token.Claims.(jwt.MapClaims)
 
-			id := int(claims["id"].(float64))
-			companyID := int(claims["c"].(float64))
-			locationID := int(claims["l"].(float64))
+			id := claims["id"].(string)
 			username := claims["u"].(string)
 			email := claims["e"].(string)
-			role := gorsk.AccessRole(claims["r"].(float64))
+			role := "admin" //gorsk.AccessRole(claims["r"].(float64))
 
 			c.Set("id", id)
-			c.Set("company_id", companyID)
-			c.Set("location_id", locationID)
 			c.Set("username", username)
 			c.Set("email", email)
 			c.Set("role", role)
@@ -66,41 +63,41 @@ func (j *Service) MWFunc() echo.MiddlewareFunc {
 }
 
 // ParseToken parses token from Authorization header
-func (j *Service) ParseToken(c echo.Context) (*jwt.Token, error) {
+func (j *Service) ParseToken(c echo.Context) *jwt.Token {
 
 	token := c.Request().Header.Get("Authorization")
 	if token == "" {
-		return nil, gorsk.ErrGeneric
+		return nil
 	}
 	parts := strings.SplitN(token, " ", 2)
 	if !(len(parts) == 2 && parts[0] == "Bearer") {
-		return nil, gorsk.ErrGeneric
+		return nil
 	}
 
-	return jwt.Parse(parts[1], func(token *jwt.Token) (interface{}, error) {
+	parsedToken, _ := jwt.Parse(parts[1], func(token *jwt.Token) (interface{}, error) {
 		if j.algo != token.Method {
-			return nil, gorsk.ErrGeneric
+			return nil, nil
 		}
 		return j.key, nil
 	})
 
+	return parsedToken
 }
 
 // GenerateToken generates new JWT token and populates it with user data
-func (j *Service) GenerateToken(u *gorsk.User) (string, string, error) {
+func (j *Service) GenerateToken(u *model.User) (string, error) {
 	expire := time.Now().Add(j.duration)
 
 	token := jwt.NewWithClaims((j.algo), jwt.MapClaims{
 		"id":  u.ID,
 		"u":   u.Username,
 		"e":   u.Email,
-		"r":   u.Role.AccessLevel,
-		"c":   u.CompanyID,
-		"l":   u.LocationID,
+		"al":  u.AccessLevel,
 		"exp": expire.Unix(),
 	})
 
 	tokenString, err := token.SignedString(j.key)
 
-	return tokenString, expire.Format(time.RFC3339), err
+	//return tokenString, expire.Format(time.RFC3339), err
+	return tokenString, err
 }

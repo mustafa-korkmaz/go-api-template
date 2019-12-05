@@ -1,4 +1,4 @@
-package viewmodel
+package response
 
 //Olive represents olive model
 type Olive struct {

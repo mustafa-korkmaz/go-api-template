@@ -1,4 +1,4 @@
-package viewmodel
+package response
 
 import "github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
 

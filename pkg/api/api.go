@@ -31,7 +31,7 @@ func Start(cfg *config.Configuration) error {
 	//group api versions
 	v1 := e.Group("/v1")
 	v2 := e.Group("/v2")
-	// v1.Use(jwt.MWFunc())
+	//v1.Use(jwt.MWFunc())
 
 	// ut.NewHTTP(ul.New(user.Initialize(db, rbac, sec), log), v1)
 	// pt.NewHTTP(pl.New(password.Initialize(db, rbac, sec), log), v1)

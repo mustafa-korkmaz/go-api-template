@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/request"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response"
 
 	"github.com/labstack/echo"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel"
 )
 
 // HTTP represents healthcheck http transport service
@@ -38,7 +39,7 @@ func (h *HTTP) get(c echo.Context) error {
 		return err
 	}
 
-	var resp = viewmodel.APIResponse{}
+	var resp = response.APIResponse{}
 	resp.Code = enum.ResponseCode.Success
 
 	resp.Data = struct {
@@ -49,18 +50,15 @@ func (h *HTTP) get(c echo.Context) error {
 		val,
 	}
 
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, &resp)
 }
 
 func (h *HTTP) getPagedList(c echo.Context) error {
 
-	req := viewmodel.PagedListRequest{}
+	req := request.PagedListRequest{}
 	if err := c.Bind(&req); err != nil {
 		return echo.ErrBadRequest
 	}
-
-	var resp = viewmodel.APIResponse{}
-	resp.Code = enum.ResponseCode.Success
 
 	var pagedListResp, err = h.svc.GetPagedList(req)
 
@@ -68,9 +66,7 @@ func (h *HTTP) getPagedList(c echo.Context) error {
 		return err
 	}
 
-	resp.Data = pagedListResp
-
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, &pagedListResp)
 }
 
 func (h *HTTP) post(c echo.Context) error {
@@ -84,7 +80,7 @@ func (h *HTTP) post(c echo.Context) error {
 		return err
 	}
 
-	var resp = viewmodel.APIResponse{}
+	var resp = response.APIResponse{}
 
 	resp.Code = enum.ResponseCode.Success
 
@@ -96,7 +92,7 @@ func (h *HTTP) post(c echo.Context) error {
 		req.Value,
 	}
 
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, &resp)
 }
 
 func (h *HTTP) getV2(c echo.Context) error {
@@ -108,7 +104,7 @@ func (h *HTTP) getV2(c echo.Context) error {
 		return err
 	}
 
-	var resp = viewmodel.APIResponse{}
+	var resp = response.APIResponse{}
 	resp.Code = enum.ResponseCode.Success
 
 	resp.Data = struct {
@@ -119,7 +115,7 @@ func (h *HTTP) getV2(c echo.Context) error {
 		val,
 	}
 
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, &resp)
 }
 
 // HealthCheckReq represents body of HealthCheck request.

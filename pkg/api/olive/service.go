@@ -5,17 +5,17 @@ import (
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
 	o "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository/olive"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/uow"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Service represents healthcheck api interface
 type Service interface {
-	Get(string) viewmodel.APIResponse
-	Count() viewmodel.APIResponse
+	Get(string) *response.APIResponse
+	Count() *response.APIResponse
 }
 
-//Uow represents olive service unit of work
+//Uow represents olive service unit of work behaviour
 type Uow interface {
 	Save() error
 	//begin transaction
@@ -28,9 +28,9 @@ type Olive struct {
 }
 
 // Get returns the olive detais
-func (o *Olive) Get(id string) viewmodel.APIResponse {
+func (o *Olive) Get(id string) *response.APIResponse {
 
-	var apiResp = viewmodel.APIResponse{
+	var apiResp = response.APIResponse{
 		Code: enum.ResponseCode.Fail,
 		Data: nil,
 	}
@@ -42,23 +42,24 @@ func (o *Olive) Get(id string) viewmodel.APIResponse {
 
 	if err != nil {
 		apiResp.Message = "olive id:" + id + " cannot found"
-		return apiResp
+		return &apiResp
 	}
 
-	apiResp.Data = viewmodel.Olive{
+	apiResp.Data = response.Olive{
 		Country: olive.Country,
 		Kind:    olive.Kind,
 		ID:      olive.ID.Hex(),
 	}
 
 	apiResp.Code = enum.ResponseCode.Success
-	return apiResp
+
+	return &apiResp
 }
 
 // Count returns the total olive count
-func (o *Olive) Count() viewmodel.APIResponse {
+func (o *Olive) Count() *response.APIResponse {
 
-	var apiResp = viewmodel.APIResponse{
+	var apiResp = response.APIResponse{
 		Code: enum.ResponseCode.Fail,
 	}
 
@@ -66,13 +67,13 @@ func (o *Olive) Count() viewmodel.APIResponse {
 
 	if err != nil {
 		apiResp.Message = "olives cannot found"
-		return apiResp
+		return &apiResp
 	}
 
 	apiResp.Data = count
-
 	apiResp.Code = enum.ResponseCode.Success
-	return apiResp
+
+	return &apiResp
 }
 
 // New creates new olive api service
@@ -81,7 +82,7 @@ func New(client *mongo.Client, dbName string) *Olive {
 	var uow = uow.New(client, dbName)
 
 	var olive = Olive{}
-	olive.repository = uow.OliveRepository()
+	olive.repository = uow.GetOliveRepository()
 	olive.uow = uow
 
 	return &olive

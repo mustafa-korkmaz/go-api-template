@@ -28,14 +28,14 @@ func New(client *mongo.Client, dbName string) *Uow {
 
 //repository implementations goes here..
 
-//OliveRepository function creates a new Olive object
-func (u *Uow) OliveRepository() *o.Olive {
+//GetOliveRepository function creates a new Olive object
+func (u *Uow) GetOliveRepository() *o.Olive {
 	repo := o.New(u.client, u.dbName)
 	return repo
 }
 
-//OliveOilRepository function creates a new OliveOil object
-func (u *Uow) OliveOilRepository() *oo.OliveOil {
+//GetOliveOilRepository function creates a new OliveOil object
+func (u *Uow) GetOliveOilRepository() *oo.OliveOil {
 	repo := oo.New(u.client, u.dbName)
 	return repo
 }
