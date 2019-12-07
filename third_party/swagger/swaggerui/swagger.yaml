@@ -13,7 +13,7 @@ definitions:
         type: string
         x-go-name: Message
     type: object
-    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/model
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response
   HealthCheckReq:
     properties:
       value:
@@ -37,7 +37,7 @@ definitions:
         type: integer
         x-go-name: Start
     type: object
-    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/model
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/request
   PagedListResponse:
     description: PagedListResponse represents a list of paginated items and total
       item count for the storage
@@ -52,7 +52,7 @@ definitions:
         type: integer
         x-go-name: RecordsTotal
     type: object
-    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/model
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response
   ResponseCodeType:
     description: ResponseCodeType represents enum type for response code
     format: int64

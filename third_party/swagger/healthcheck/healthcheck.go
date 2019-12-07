@@ -2,7 +2,7 @@ package swaggermeta
 
 import (
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/request"
 )
 
 // swagger:route POST /v1/healthcheck/paginationtest healthcheck paginationtest
@@ -13,7 +13,7 @@ import (
 type pagedListRequestWrapper struct {
 	// api pagedList request body.
 	// in:body
-	Body model.PagedListRequest `json:"body"`
+	Body request.PagedListRequest `json:"body"`
 }
 
 // swagger:route POST /v1/healthcheck healthcheck healthcheckPost
