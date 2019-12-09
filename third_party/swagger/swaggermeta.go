@@ -38,10 +38,10 @@ type genericResponseWrapper struct {
 
 // api generic response body including pagedList.
 type genericPagedListResponse struct {
-	// in:body
-	Code    enum.ResponseCodeType      `json:"code"`
-	Message string                     `json:"message"`
-	Data    response.PagedListResponse `json:"data"`
+	Result    enum.ResponseResultType `json:"result"`
+	ErrorCode enum.ErrorCodeType      `json:"error_code,omitempty"`
+	Message   string                  `json:"message"`
+	Data      response.PagedList      `json:"data"`
 }
 
 // api generic response body including pagedList.

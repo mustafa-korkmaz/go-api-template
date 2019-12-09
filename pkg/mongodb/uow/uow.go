@@ -3,6 +3,7 @@ package uow
 import (
 	o "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository/olive"
 	oo "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository/olive_oil"
+	user "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository/user"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -37,5 +38,11 @@ func (u *Uow) GetOliveRepository() *o.Olive {
 //GetOliveOilRepository function creates a new OliveOil object
 func (u *Uow) GetOliveOilRepository() *oo.OliveOil {
 	repo := oo.New(u.client, u.dbName)
+	return repo
+}
+
+//GetUserRepository function creates a new User object
+func (u *Uow) GetUserRepository() *user.User {
+	repo := user.New(u.client, u.dbName)
 	return repo
 }

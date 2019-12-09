@@ -32,6 +32,9 @@ type Service struct {
 	// Duration for which the jwt token is valid.
 	duration time.Duration
 
+	// Duration for which the jwt refresh token is valid.
+	refreshDuration time.Duration
+
 	// JWT signing algorithm
 	algo jwt.SigningMethod
 }
@@ -84,8 +87,8 @@ func (j *Service) ParseToken(c echo.Context) *jwt.Token {
 	return parsedToken
 }
 
-// GenerateToken generates new JWT token and populates it with user data
-func (j *Service) GenerateToken(u *model.User) (string, error) {
+// GenerateTokens generates new JWT token and refresh token and populates them with user data
+func (j *Service) GenerateTokens(u *model.User) (string, string, error) {
 	expire := time.Now().Add(j.duration)
 
 	token := jwt.NewWithClaims((j.algo), jwt.MapClaims{
@@ -98,6 +101,19 @@ func (j *Service) GenerateToken(u *model.User) (string, error) {
 
 	tokenString, err := token.SignedString(j.key)
 
+	if err != nil {
+		return "", "", err
+	}
+
+	expire = time.Now().Add(j.refreshDuration)
+
+	refreshToken := jwt.NewWithClaims((j.algo), jwt.MapClaims{
+		"id":  u.ID,
+		"exp": expire.Unix(),
+	})
+
+	refreshTokenString, err := refreshToken.SignedString(j.key)
+
 	//return tokenString, expire.Format(time.RFC3339), err
-	return tokenString, err
+	return tokenString, refreshTokenString, err
 }

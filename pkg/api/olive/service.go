@@ -31,8 +31,8 @@ type Olive struct {
 func (o *Olive) Get(id string) *response.APIResponse {
 
 	var apiResp = response.APIResponse{
-		Code: enum.ResponseCode.Fail,
-		Data: nil,
+		Result: enum.ResponseResult.Fail,
+		Data:   nil,
 	}
 
 	var olive model.Olive
@@ -51,7 +51,7 @@ func (o *Olive) Get(id string) *response.APIResponse {
 		ID:      olive.ID.Hex(),
 	}
 
-	apiResp.Code = enum.ResponseCode.Success
+	apiResp.Result = enum.ResponseResult.Success
 
 	return &apiResp
 }
@@ -60,7 +60,7 @@ func (o *Olive) Get(id string) *response.APIResponse {
 func (o *Olive) Count() *response.APIResponse {
 
 	var apiResp = response.APIResponse{
-		Code: enum.ResponseCode.Fail,
+		Result: enum.ResponseResult.Fail,
 	}
 
 	var count, err = o.repository.GetOlivesCount()
@@ -71,7 +71,7 @@ func (o *Olive) Count() *response.APIResponse {
 	}
 
 	apiResp.Data = count
-	apiResp.Code = enum.ResponseCode.Success
+	apiResp.Result = enum.ResponseResult.Success
 
 	return &apiResp
 }

@@ -40,7 +40,7 @@ func (h *HTTP) get(c echo.Context) error {
 	}
 
 	var resp = response.APIResponse{}
-	resp.Code = enum.ResponseCode.Success
+	resp.Result = enum.ResponseResult.Success
 
 	resp.Data = struct {
 		AwesomeCars []string `json:"awesome_cars"`
@@ -55,7 +55,7 @@ func (h *HTTP) get(c echo.Context) error {
 
 func (h *HTTP) getPagedList(c echo.Context) error {
 
-	req := request.PagedListRequest{}
+	req := request.PagedList{}
 	if err := c.Bind(&req); err != nil {
 		return echo.ErrBadRequest
 	}
@@ -82,7 +82,7 @@ func (h *HTTP) post(c echo.Context) error {
 
 	var resp = response.APIResponse{}
 
-	resp.Code = enum.ResponseCode.Success
+	resp.Result = enum.ResponseResult.Success
 
 	resp.Data = struct {
 		AwesomePhones []string `json:"awesome_phones"`
@@ -105,7 +105,7 @@ func (h *HTTP) getV2(c echo.Context) error {
 	}
 
 	var resp = response.APIResponse{}
-	resp.Code = enum.ResponseCode.Success
+	resp.Result = enum.ResponseResult.Success
 
 	resp.Data = struct {
 		AwesomeCars []string `json:"awesome_cars"`

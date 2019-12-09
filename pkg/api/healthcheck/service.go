@@ -9,7 +9,7 @@ import (
 // Service represents healthcheck application interface
 type Service interface {
 	Get(string) error
-	GetPagedList(request.PagedListRequest) (*response.APIResponse, error)
+	GetPagedList(request.PagedList) (*response.APIResponse, error)
 	Post(string) error
 }
 
@@ -30,10 +30,10 @@ func (hc *HealthCheck) Post(value string) error {
 }
 
 //GetPagedList returns a new pagedListResponse by the given criterias
-func (hc *HealthCheck) GetPagedList(req request.PagedListRequest) (*response.APIResponse, error) {
+func (hc *HealthCheck) GetPagedList(req request.PagedList) (*response.APIResponse, error) {
 	var numbers = [10]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-	var resp = response.PagedListResponse{
+	var resp = response.PagedList{
 		RecordsTotal: req.Length,
 		Items:        make([]interface{}, len(numbers)),
 	}
@@ -43,8 +43,8 @@ func (hc *HealthCheck) GetPagedList(req request.PagedListRequest) (*response.API
 	}
 
 	var apiResp = &response.APIResponse{
-		Code: enum.ResponseCode.Success,
-		Data: resp,
+		Result: enum.ResponseResult.Success,
+		Data:   resp,
 	}
 
 	return apiResp, nil

@@ -1,13 +1,18 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 //User represents user model
 type User struct {
 	ID          *primitive.ObjectID `bson:"_id"`
 	Username    string              `bson:"username"`
 	Email       string              `bson:"email"`
-	AccessLevel string              `bson:"access_level"`
+	FullName    string              `bson:"full_name"`
+	AccessLevel byte                `bson:"access_level"`
+	Status      enum.UserStatusType `bson:"status"`
 	//..
 	//..
 }

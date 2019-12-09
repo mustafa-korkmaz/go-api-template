@@ -4,16 +4,22 @@ definitions:
   APIResponse:
     description: APIResponse represents base response
     properties:
-      code:
-        $ref: '#/definitions/ResponseCodeType'
       data:
         type: object
         x-go-name: Data
+      error_code:
+        $ref: '#/definitions/ErrorCodeType'
       message:
         type: string
         x-go-name: Message
+      result:
+        $ref: '#/definitions/ResponseResultType'
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response
+  ErrorCodeType:
+    description: ErrorCodeType represents enum type for error message
+    type: string
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/enum
   HealthCheckReq:
     properties:
       value:
@@ -22,7 +28,7 @@ definitions:
     title: HealthCheckReq represents body of HealthCheck request.
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport
-  PagedListRequest:
+  PagedList:
     description: PagedListRequest represents listing conditions for paginated items
     properties:
       include_records_total:
@@ -38,38 +44,51 @@ definitions:
         x-go-name: Start
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/request
-  PagedListResponse:
-    description: PagedListResponse represents a list of paginated items and total
-      item count for the storage
-    properties:
-      items:
-        items:
-          type: object
-        type: array
-        x-go-name: Items
-      records_total:
-        format: int64
-        type: integer
-        x-go-name: RecordsTotal
-    type: object
-    x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response
-  ResponseCodeType:
-    description: ResponseCodeType represents enum type for response code
+  ResponseResultType:
+    description: ResponseResultType represents enum type for response code
     format: int64
     type: integer
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/pkg/enum
   genericPagedListResponse:
     properties:
-      code:
-        $ref: '#/definitions/ResponseCodeType'
       data:
-        $ref: '#/definitions/PagedListResponse'
+        $ref: '#/definitions/PagedList'
+      error_code:
+        $ref: '#/definitions/ErrorCodeType'
       message:
         type: string
         x-go-name: Message
+      result:
+        $ref: '#/definitions/ResponseResultType'
     title: api generic response body including pagedList.
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger
+  loginRequest:
+    properties:
+      password:
+        type: string
+        x-go-name: Password
+      username_or_email:
+        type: string
+        x-go-name: UsernameOrEmail
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger/auth
+  registerRequest:
+    properties:
+      email:
+        type: string
+        x-go-name: Email
+      full_name:
+        type: string
+        x-go-name: FullName
+      password:
+        type: string
+        x-go-name: Password
+      username:
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger/auth
 host: localhost:1907
 info:
   contact:
@@ -121,7 +140,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PagedListRequest'
+          $ref: '#/definitions/PagedList'
         x-go-name: Body
       responses:
         "200":
@@ -129,6 +148,22 @@ paths:
       summary: Returns a sample list for pagination parameters.
       tags:
       - healthcheck
+  /v1/login:
+    post:
+      description: Authenticates user and returns valid access_token and refresh_token
+      operationId: login
+      parameters:
+      - description: LoginRequest POST request body.
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/loginRequest'
+        x-go-name: Body
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      tags:
+      - auth
   /v1/olive/{id}:
     get:
       operationId: oliveGet
@@ -154,6 +189,31 @@ paths:
           $ref: '#/responses/genericResponse'
       tags:
       - olive
+  /v1/refresh:
+    get:
+      description: Returns new valid access_token and refresh_token
+      operationId: refreshToken
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      tags:
+      - auth
+  /v1/register:
+    post:
+      description: Creates new user
+      operationId: register
+      parameters:
+      - description: registerRequest POST request bofy.
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/registerRequest'
+        x-go-name: Body
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      tags:
+      - auth
   /v2/healthcheck/{value}:
     get:
       operationId: healthcheckGetV2

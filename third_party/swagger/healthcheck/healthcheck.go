@@ -13,7 +13,7 @@ import (
 type pagedListRequestWrapper struct {
 	// api pagedList request body.
 	// in:body
-	Body request.PagedListRequest `json:"body"`
+	Body request.PagedList `json:"body"`
 }
 
 // swagger:route POST /v1/healthcheck healthcheck healthcheckPost
