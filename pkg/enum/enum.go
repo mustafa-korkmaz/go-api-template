@@ -9,6 +9,9 @@ type UserStatusType byte
 // ErrorCodeType represents enum type for error message
 type ErrorCodeType string
 
+// AccessLevelType represents enum type for user access level the more, the higher access level
+type AccessLevelType byte
+
 //enum list for ResponseCodeType
 type responseResultTypeList struct {
 	Success ResponseResultType
@@ -16,7 +19,7 @@ type responseResultTypeList struct {
 	Fail    ResponseResultType
 }
 
-// ResponseCode represents ResponseCodeType enums for public use
+// ResponseResult represents ResponseCodeType enums for public use
 var ResponseResult = &responseResultTypeList{
 	Success: 1,
 	Warning: 2,
@@ -41,14 +44,39 @@ var UserStatus = &userStatusList{
 
 //enum list for ErrorMessage
 type errorCodeList struct {
-	AppError       ErrorCodeType
-	UserNotFound   ErrorCodeType
-	RecordNotFound ErrorCodeType
+	None                ErrorCodeType
+	AppError            ErrorCodeType
+	UserNotFound        ErrorCodeType
+	UserNotAuthorized   ErrorCodeType
+	UserAlreadyExists   ErrorCodeType
+	RecordNotFound      ErrorCodeType
+	RecordAlreadyExists ErrorCodeType
+	TokenCreationError  ErrorCodeType
+	WeakPassword        ErrorCodeType
 }
 
 // ErrorCode represents ErrormessageType enums for public use
 var ErrorCode = &errorCodeList{
-	AppError:       "APP_ERROR",
-	UserNotFound:   "USER_NOT_FOUND",
-	RecordNotFound: "RECORD_NOT_FOUND",
+	AppError:            "APP_ERROR",
+	UserNotFound:        "USER_NOT_FOUND",
+	UserNotAuthorized:   "UNAUTHORIZED",
+	RecordNotFound:      "RECORD_NOT_FOUND",
+	UserAlreadyExists:   "USER_EXISTS",
+	RecordAlreadyExists: "RECORD_EXISTS",
+	TokenCreationError:  "TOKEN_CANNOT_CREATED",
+	WeakPassword:        "WEAK_PASSWORD",
+}
+
+//enum list for ErrorMessage
+type accessLevelTypeList struct {
+	Standart AccessLevelType
+	Author   AccessLevelType
+	Admin    AccessLevelType
+}
+
+// AccessLevel represents ErrormessageType enums for public use
+var AccessLevel = &accessLevelTypeList{
+	Standart: 0,
+	Author:   1,
+	Admin:    2,
 }

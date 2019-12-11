@@ -10,7 +10,7 @@ import (
 
 // Repository represents mongo db base operations interface
 type Repository interface {
-	FindOne(objectID string) *mongo.SingleResult
+	FindOneByID(objectID string) *mongo.SingleResult
 	// Insert(entity string)
 	// Update(entity string)
 	// Delete(id string)
@@ -23,8 +23,8 @@ type MongoBase struct {
 	CollectionName string
 }
 
-//FindOne gets the result by ObjectId
-func (repository *MongoBase) FindOne(objectID string) *mongo.SingleResult {
+//FindOneByID gets the result by ObjectId
+func (repository *MongoBase) FindOneByID(objectID string) *mongo.SingleResult {
 
 	collectionName := repository.CollectionName
 	db := repository.DBName
@@ -34,7 +34,34 @@ func (repository *MongoBase) FindOne(objectID string) *mongo.SingleResult {
 	objID, _ := primitive.ObjectIDFromHex(objectID)
 	doc := bson.D{primitive.E{Key: "_id", Value: objID}}
 
-	return collection.FindOne(context.TODO(), doc)
+	var res = collection.FindOne(context.TODO(), doc)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return nil //record not found
+		}
+	}
+
+	return res
+}
+
+//FindOnebyDocument gets the result by document. Returns nil for record not found
+func (repository *MongoBase) FindOnebyDocument(doc bson.D) *mongo.SingleResult {
+
+	collectionName := repository.CollectionName
+	db := repository.DBName
+
+	collection := repository.client.Database(db).Collection(collectionName)
+
+	var res = collection.FindOne(context.TODO(), doc)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return nil //record not found
+		}
+	}
+
+	return res
 }
 
 //GetCollection returns the mongoDb collection reference

@@ -3,18 +3,14 @@ package repository
 import (
 	"context"
 
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
 	mongodb "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const userCollectionName = "users"
-
-// Repository represents olive collection operations interface
-type Repository interface {
-	mongodb.Repository
-	GetOlivesCount() (int64, error)
-}
 
 // User respresents the struct for mongo db operations for olive collection
 type User struct {
@@ -32,6 +28,50 @@ func (u *User) GetOlivesCount() (int64, error) {
 	}
 
 	return docCount, nil
+}
+
+//GetUserByEmail returns user by email. returns nil if user not exists
+func (u *User) GetUserByEmail(email string) *model.User {
+
+	filter := bson.D{primitive.E{Key: "email", Value: email}}
+
+	var res = u.FindOnebyDocument(filter)
+
+	if res == nil {
+		//record not found
+		return nil
+	}
+
+	var user = new(model.User)
+
+	res.Decode(user)
+
+	return user
+}
+
+//GetUserByUsername returns user by username. returns nil if user not exists
+func (u *User) GetUserByUsername(email string) *model.User {
+
+	var user = new(model.User)
+
+	//var tag = model.GetBsonTag(user, "username")
+	filter := bson.D{primitive.E{Key: "username", Value: email}}
+
+	var res = u.FindOnebyDocument(filter)
+
+	if res == nil {
+		//record not found
+		return nil
+	}
+
+	res.Decode(user)
+
+	return user
+}
+
+//Register creates new user
+func (u *User) Register(userModel *model.User) error {
+	return nil
 }
 
 //New creates a new olive repository object

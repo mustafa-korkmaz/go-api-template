@@ -36,7 +36,7 @@ func (o *Olive) Get(id string) *response.APIResponse {
 	}
 
 	var olive model.Olive
-	var doc = o.repository.FindOne(id)
+	var doc = o.repository.FindOneByID(id)
 
 	err := doc.Decode(&olive)
 

@@ -53,12 +53,12 @@ func (j *Service) MWFunc() echo.MiddlewareFunc {
 			id := claims["id"].(string)
 			username := claims["u"].(string)
 			email := claims["e"].(string)
-			role := "admin" //gorsk.AccessRole(claims["r"].(float64))
+			accessLevel := claims["al"].(int)
 
 			c.Set("id", id)
 			c.Set("username", username)
 			c.Set("email", email)
-			c.Set("role", role)
+			c.Set("access_level", accessLevel)
 
 			return next(c)
 		}
@@ -109,6 +109,7 @@ func (j *Service) GenerateTokens(u *model.User) (string, string, error) {
 
 	refreshToken := jwt.NewWithClaims((j.algo), jwt.MapClaims{
 		"id":  u.ID,
+		"al":  0,
 		"exp": expire.Unix(),
 	})
 

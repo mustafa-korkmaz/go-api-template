@@ -1,20 +1,19 @@
 package transport
 
 import (
-	"net/http"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/auth"
 
 	"github.com/labstack/echo"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/olive"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/request"
 )
 
 // HTTP represents olive http transport service
 type HTTP struct {
-	svc olive.Service
+	svc auth.Service
 }
 
 // NewHTTP creates new olive http service with valid api versions
-func NewHTTP(svc olive.Service, mw echo.MiddlewareFunc, groups ...*echo.Group) {
+func NewHTTP(svc auth.Service, mw echo.MiddlewareFunc, groups ...*echo.Group) {
 	h := HTTP{svc}
 	v1 := groups[0]
 
@@ -32,27 +31,27 @@ func (h *HTTP) login(c echo.Context) error {
 		return err
 	}
 
-	var resp = h.svc.Get(id)
+	var resp = h.svc.Authenticate(cred.UsernameOrEmail, cred.Password)
 
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(resp.GetStatusCode(), resp)
 }
 
 func (h *HTTP) register(c echo.Context) error {
 
-	newUser := new(request.Register)
+	registerRequest := new(request.Register)
 
-	if err := c.Bind(newUser); err != nil {
+	if err := c.Bind(registerRequest); err != nil {
 		return err
 	}
 
-	var resp = h.svc.Get(id)
+	var resp = h.svc.Register(registerRequest)
 
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(resp.GetStatusCode(), resp)
 }
 
 func (h *HTTP) refresh(c echo.Context) error {
 
-	var resp = h.svc.Count()
+	var resp = h.svc.Refresh(c)
 
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(resp.GetStatusCode(), resp)
 }
