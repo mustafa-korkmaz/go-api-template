@@ -9,18 +9,36 @@ import (
 )
 
 // Repository represents mongo db base operations interface
-type Repository interface {
-	FindOneByID(objectID string) *mongo.SingleResult
-	// Insert(entity string)
-	// Update(entity string)
-	// Delete(id string)
-}
+// Unlike java interfaces, we will create our repository interface in an upper layer
+//type Repository interface {
+//FindOneByID(objectID string) *mongo.SingleResult
+//Insert(entity string)
+// Update(entity string)
+// Delete(id string)
+//}
 
 // MongoBase respresents the struct for mongo db base operations
 type MongoBase struct {
 	client         *mongo.Client
 	DBName         string
 	CollectionName string
+}
+
+//Insert saves a new doc
+func (repository *MongoBase) Insert(object interface{}) (interface{}, error) {
+
+	collectionName := repository.CollectionName
+	db := repository.DBName
+
+	collection := repository.client.Database(db).Collection(collectionName)
+
+	var res, err = collection.InsertOne(context.TODO(), object)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res.InsertedID, nil
 }
 
 //FindOneByID gets the result by ObjectId

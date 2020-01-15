@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"context"
-
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
 	mongodb "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository"
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,22 +10,9 @@ import (
 
 const userCollectionName = "users"
 
-// User respresents the struct for mongo db operations for olive collection
+// User respresents the struct for mongo db operations for user collection
 type User struct {
 	mongodb.MongoBase
-}
-
-//GetOlivesCount returns the document count for olive collection
-func (u *User) GetOlivesCount() (int64, error) {
-	collection := u.GetCollection()
-
-	var docCount, err = collection.CountDocuments(context.TODO(), bson.D{})
-
-	if err != nil {
-		return 0, err
-	}
-
-	return docCount, nil
 }
 
 //GetUserByEmail returns user by email. returns nil if user not exists
@@ -50,12 +35,11 @@ func (u *User) GetUserByEmail(email string) *model.User {
 }
 
 //GetUserByUsername returns user by username. returns nil if user not exists
-func (u *User) GetUserByUsername(email string) *model.User {
+func (u *User) GetUserByUsername(username string) *model.User {
 
 	var user = new(model.User)
 
-	//var tag = model.GetBsonTag(user, "username")
-	filter := bson.D{primitive.E{Key: "username", Value: email}}
+	filter := bson.D{primitive.E{Key: "username", Value: username}}
 
 	var res = u.FindOnebyDocument(filter)
 
@@ -71,10 +55,11 @@ func (u *User) GetUserByUsername(email string) *model.User {
 
 //Register creates new user
 func (u *User) Register(userModel *model.User) error {
+	//todo: implement new user registration here
 	return nil
 }
 
-//New creates a new olive repository object
+//New creates a new user repository object
 func New(c *mongo.Client, dbName string) *User {
 	var user = User{}
 	user.CollectionName = userCollectionName

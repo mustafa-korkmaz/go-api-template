@@ -10,12 +10,6 @@ import (
 
 const oliveCollectionName = "olives"
 
-// Repository represents olive collection operations interface
-type Repository interface {
-	mongodb.Repository
-	GetOlivesCount() (int64, error)
-}
-
 // Olive respresents the struct for mongo db operations for olive collection
 type Olive struct {
 	mongodb.MongoBase

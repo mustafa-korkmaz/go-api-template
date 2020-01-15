@@ -10,12 +10,6 @@ import (
 
 const oliveOilsCollectionName = "oliveOils"
 
-// Repository represents olive collection operations interface
-type Repository interface {
-	mongodb.Repository
-	GetOliveOilAmount() (float32, error)
-}
-
 // OliveOil respresents the struct for mongo db operations for oliveOils collection
 type OliveOil struct {
 	mongodb.MongoBase

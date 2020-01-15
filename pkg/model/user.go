@@ -26,5 +26,5 @@ type AuthUser struct {
 	ID          string
 	Username    string
 	Email       string
-	AccessLevel byte
+	AccessLevel enum.AccessLevelType
 }

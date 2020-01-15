@@ -3,7 +3,6 @@ package olive
 import (
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
-	o "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository/olive"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/uow"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,10 +20,16 @@ type Uow interface {
 	//begin transaction
 }
 
+// Repository represents user auth operations interface
+type Repository interface {
+	FindOneByID(id string) *mongo.SingleResult
+	GetOlivesCount() (int64, error)
+}
+
 // Olive represents olive api service
 type Olive struct {
 	uow        Uow
-	repository o.Repository
+	repository Repository
 }
 
 // Get returns the olive detais

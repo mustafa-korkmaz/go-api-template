@@ -3,18 +3,17 @@ package auth
 import (
 	"strings"
 
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/uow"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/helper"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/role"
 
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/secure"
 
 	"github.com/labstack/echo"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/model"
-	mongodb "github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/repository"
-	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb/uow"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/request"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -45,10 +44,10 @@ type TokenGenerator interface {
 
 // Repository represents user auth operations interface
 type Repository interface {
-	mongodb.Repository
 	GetUserByEmail(email string) *model.User
 	GetUserByUsername(username string) *model.User
 	Register(*model.User) error
+	FindOneByID(id string) *mongo.SingleResult
 }
 
 // Authenticate tries to authenticate user
@@ -77,7 +76,7 @@ func (a *Auth) Authenticate(usernameOrEmail string, password string) *response.A
 		return &apiResp
 	}
 
-	isPasswordValid := secure.HashMatchesPassword(user.Password, password)
+	isPasswordValid := secure.ValidatePassword(user.Password, password)
 
 	if !isPasswordValid {
 		apiResp.SetError(enum.ErrorCode.UserNotAuthorized)
@@ -107,27 +106,39 @@ func (a *Auth) Authenticate(usernameOrEmail string, password string) *response.A
 // Refresh returns a new valid token and a refresh token
 func (a *Auth) Refresh(c echo.Context) *response.APIResponse {
 
+	var (
+		err          error
+		token        string
+		refreshToken string
+	)
+
 	var apiResp = response.APIResponse{
 		Result: enum.ResponseResult.Fail,
 	}
 
-	var idStr = c.Get("id").(string)
-	var userID, _ = primitive.ObjectIDFromHex(idStr)
+	var user model.User
 
-	var user = model.User{
-		ID: &userID,
-	}
+	var id = role.User(c).ID
 
-	var token, refreshToken, err = a.tokenGenerator.GenerateTokens(&user)
+	var doc = a.repository.FindOneByID(id)
+
+	err = doc.Decode(&user)
 
 	if err != nil {
-		apiResp.SetError(enum.ErrorCode.RecordNotFound)
+		apiResp.SetError(enum.ErrorCode.UserNotFound)
+		return &apiResp
+	}
+
+	token, refreshToken, err = a.tokenGenerator.GenerateTokens(&user)
+
+	if err != nil {
+		apiResp.SetError(enum.ErrorCode.TokenCreationError)
 		return &apiResp
 	}
 
 	apiResp.Data = response.Auth{
 		Email:        user.Email,
-		ID:           idStr,
+		ID:           user.ID.Hex(),
 		RefreshToken: refreshToken,
 		Token:        token,
 	}

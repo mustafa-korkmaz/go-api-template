@@ -92,7 +92,7 @@ func (j *Service) GenerateTokens(u *model.User) (string, string, error) {
 	expire := time.Now().Add(j.duration)
 
 	token := jwt.NewWithClaims((j.algo), jwt.MapClaims{
-		"id":  u.ID,
+		"id":  u.ID.Hex(),
 		"u":   u.Username,
 		"e":   u.Email,
 		"al":  u.AccessLevel,

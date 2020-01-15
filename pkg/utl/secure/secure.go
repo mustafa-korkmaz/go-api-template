@@ -20,7 +20,7 @@ func Hash(password string) string {
 	return string(hashedPW)
 }
 
-// HashMatchesPassword matches hash with password. Returns true if hash and password match.
-func HashMatchesPassword(hash, password string) bool {
-	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
+// ValidatePassword matches hashed password text with plain password. Returns true if hash and password match.
+func ValidatePassword(hashedPass, password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(password)) == nil
 }
