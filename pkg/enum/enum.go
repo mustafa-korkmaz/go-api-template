@@ -57,6 +57,7 @@ type errorCodeList struct {
 
 // ErrorCode represents ErrormessageType enums for public use
 var ErrorCode = &errorCodeList{
+	None:                "",
 	AppError:            "APP_ERROR",
 	UserNotFound:        "USER_NOT_FOUND",
 	UserNotAuthorized:   "UNAUTHORIZED",

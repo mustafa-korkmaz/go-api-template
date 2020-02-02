@@ -21,9 +21,6 @@ func Start(cfg *config.Configuration) error {
 		return err
 	}
 
-	// sec := secure.New(cfg.App.MinPasswordStr, sha1.New())
-	// rbac := rbac.New()
-	//
 	//log := zlog.New()
 
 	e := server.New()

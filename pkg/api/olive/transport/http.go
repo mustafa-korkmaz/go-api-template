@@ -18,7 +18,7 @@ func NewHTTP(svc olive.Service, mw echo.MiddlewareFunc, groups ...*echo.Group) {
 	v1 := groups[0].Group("/olive")
 
 	//define /V1/olive methods
-	v1.GET("/:id", h.get, mw) //lets assume this method requores auth
+	v1.GET("/:id", h.get, mw) //lets assume this method requires auth
 	v1.GET("/count", h.count)
 }
 
