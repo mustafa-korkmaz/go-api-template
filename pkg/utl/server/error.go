@@ -26,6 +26,7 @@ func getVldErrorMsg(s string) string {
 }
 
 func (ce *customErrHandler) handler(err error, c echo.Context) {
+	//log errors
 	var (
 		code = http.StatusInternalServerError
 		msg  interface{}

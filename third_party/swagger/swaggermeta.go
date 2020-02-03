@@ -36,12 +36,17 @@ type genericResponseWrapper struct {
 	Body response.APIResponse
 }
 
+type pagedListResponseWrapper struct {
+	Items        []interface{} `json:"items"`
+	RecordsTotal int           `json:"records_total"`
+}
+
 // api generic response body including pagedList.
 type genericPagedListResponse struct {
-	Result    enum.ResponseResultType `json:"result"`
-	ErrorCode enum.ErrorCodeType      `json:"error_code,omitempty"`
-	Message   string                  `json:"message"`
-	Data      response.PagedList      `json:"data"`
+	Result    enum.ResponseResultType  `json:"result"`
+	ErrorCode enum.ErrorCodeType       `json:"error_code,omitempty"`
+	Message   string                   `json:"message"`
+	Data      pagedListResponseWrapper `json:"data"`
 }
 
 // api generic response body including pagedList.

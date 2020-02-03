@@ -16,8 +16,8 @@ type HTTP struct {
 	svc healthcheck.Service
 }
 
-// NewHTTP creates new healthcheck http service with valid api versions
-func NewHTTP(svc healthcheck.Service, groups ...*echo.Group) {
+// New creates new healthcheck http service with valid api versions
+func New(svc healthcheck.Service, groups ...*echo.Group) {
 	h := HTTP{svc}
 	v1 := groups[0].Group("/healthcheck")
 	v2 := groups[1].Group("/healthcheck")

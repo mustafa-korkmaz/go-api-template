@@ -52,7 +52,7 @@ definitions:
   genericPagedListResponse:
     properties:
       data:
-        $ref: '#/definitions/PagedList'
+        $ref: '#/definitions/pagedListResponseWrapper'
       error_code:
         $ref: '#/definitions/ErrorCodeType'
       message:
@@ -73,6 +73,19 @@ definitions:
         x-go-name: UsernameOrEmail
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger/auth
+  pagedListResponseWrapper:
+    properties:
+      items:
+        items:
+          type: object
+        type: array
+        x-go-name: Items
+      records_total:
+        format: int64
+        type: integer
+        x-go-name: RecordsTotal
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger
   registerRequest:
     properties:
       email:

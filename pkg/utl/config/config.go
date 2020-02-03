@@ -9,10 +9,11 @@ import (
 
 // Configuration holds data necessery for configuring application
 type Configuration struct {
-	Server *Server      `yaml:"server,omitempty"`
-	Db     *Database    `yaml:"database,omitempty"`
-	Jwt    *JWT         `yaml:"jwt,omitempty"`
-	App    *Application `yaml:"application,omitempty"`
+	Server  *Server      `yaml:"server,omitempty"`
+	Db      *Database    `yaml:"database,omitempty"`
+	Jwt     *JWT         `yaml:"jwt,omitempty"`
+	App     *Application `yaml:"application,omitempty"`
+	Logging *Logging     `yaml:"logging,omitempty"`
 }
 
 // Database holds data necessery for database configuration
@@ -44,6 +45,11 @@ type JWT struct {
 type Application struct {
 	MinPasswordStr int    `yaml:"min_password_strength,omitempty"`
 	SwaggerUIPath  string `yaml:"swagger_ui_path,omitempty"`
+}
+
+// Logging holds data for logging options
+type Logging struct {
+	LogReqRespBody bool `yaml:"log_req_resp_body,omitempty"`
 }
 
 // Load returns Configuration struct

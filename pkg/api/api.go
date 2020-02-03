@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/labstack/echo/middleware"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/auth"
 	at "github.com/mustafa-korkmaz/goapitemplate/pkg/api/auth/transport"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck"
@@ -26,6 +27,11 @@ func Start(cfg *config.Configuration) error {
 	e := server.New()
 	e.Static("/swaggerui", cfg.App.SwaggerUIPath)
 
+	// we may want to log req and resp body for non-prod envs
+	if cfg.Logging.LogReqRespBody {
+		e.Use(middleware.BodyDump(server.LogBody))
+	}
+
 	//at.NewHTTP(al.New(auth.Initialize(db, jwt, sec, rbac), log), e, jwt.MWFunc())
 
 	//create jwt token validation middleware
@@ -38,9 +44,9 @@ func Start(cfg *config.Configuration) error {
 	// ut.NewHTTP(ul.New(user.Initialize(db, rbac, sec), log), v1)
 	// pt.NewHTTP(pl.New(password.Initialize(db, rbac, sec), log), v1)
 
-	at.NewHTTP(auth.New(jwt, dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
-	hct.NewHTTP(healthcheck.New(), v1, v2)
-	ot.NewHTTP(olive.New(dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
+	at.New(auth.New(jwt, dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
+	hct.New(healthcheck.New(), v1, v2)
+	ot.New(olive.New(dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
 
 	server.Start(e, &server.Config{
 		Port:                cfg.Server.Port,

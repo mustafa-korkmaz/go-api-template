@@ -34,7 +34,7 @@ type CustomValidator struct {
 // New instantates new Echo server
 func New() *echo.Echo {
 	e := echo.New()
-	e.Use(middleware.Logger(), middleware.Recover(),
+	e.Use(middleware.LoggerWithConfig(loggerConfig), middleware.Recover(),
 		secure.CORS(), secure.Headers())
 	e.GET("/", welcome)
 	e.Validator = &CustomValidator{V: validator.New()}
@@ -46,7 +46,7 @@ func New() *echo.Echo {
 
 func welcome(c echo.Context) error {
 
-	swaggerURL := "/assets/swaggerui"
+	swaggerURL := "/swaggerui/"
 
 	welcomeMessage := "Welcome to mute's Golang Api boilerplate project!\n"
 	welcomeMessage += "Jump into api docs => " + swaggerURL
@@ -98,3 +98,27 @@ func (cb *CustomBinder) Bind(i interface{}, c echo.Context) error {
 func (cv *CustomValidator) Validate(i interface{}) error {
 	return cv.V.Struct(i)
 }
+
+// LogBody logs request and response body
+func LogBody(c echo.Context, reqBody, resBody []byte) {
+
+	req := string(reqBody)
+	res := string(resBody)
+
+	if req == "" {
+		return
+	}
+
+	//todo log
+	print(req)
+	print(res)
+}
+
+var (
+	loggerConfig = middleware.LoggerConfig{
+		Skipper: middleware.DefaultSkipper,
+		Format: `{"time":"${time_rfc3339_nano}","id":"${id}","remote_ip":"${remote_ip}","host":"${host}",` +
+			`"method":"${method}","uri":"${uri}","form":"${form:value}","status":${status},"error":"${error}",` + "\n",
+		Output: os.Stdout,
+	}
+)

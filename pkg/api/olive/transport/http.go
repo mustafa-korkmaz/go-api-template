@@ -12,8 +12,8 @@ type HTTP struct {
 	svc olive.Service
 }
 
-// NewHTTP creates new olive http service with valid api versions
-func NewHTTP(svc olive.Service, mw echo.MiddlewareFunc, groups ...*echo.Group) {
+// New creates new olive http service with valid api versions
+func New(svc olive.Service, mw echo.MiddlewareFunc, groups ...*echo.Group) {
 	h := HTTP{svc}
 	v1 := groups[0].Group("/olive")
 
