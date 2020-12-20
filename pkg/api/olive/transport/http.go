@@ -15,9 +15,9 @@ type HTTP struct {
 // New creates new olive http service with valid api versions
 func New(svc olive.Service, mw echo.MiddlewareFunc, groups ...*echo.Group) {
 	h := HTTP{svc}
-	v1 := groups[0].Group("/olive")
+	v1 := groups[0].Group("/olives")
 
-	//define /V1/olive methods
+	//define /V1/olives methods
 	v1.GET("/:id", h.get, mw) //lets assume this method requires auth
 	v1.GET("/count", h.count)
 }

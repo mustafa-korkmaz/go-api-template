@@ -8,6 +8,8 @@ import (
 	hct "github.com/mustafa-korkmaz/goapitemplate/pkg/api/healthcheck/transport"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/olive"
 	ot "github.com/mustafa-korkmaz/goapitemplate/pkg/api/olive/transport"
+	"github.com/mustafa-korkmaz/goapitemplate/pkg/api/upload"
+	ut "github.com/mustafa-korkmaz/goapitemplate/pkg/api/upload/transport"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/mongodb"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/config"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/utl/middleware/jwt"
@@ -47,6 +49,7 @@ func Start(cfg *config.Configuration) error {
 	at.New(auth.New(jwt, dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
 	hct.New(healthcheck.New(), v1, v2)
 	ot.New(olive.New(dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
+	ut.New(upload.New(), jwt.MWFunc(), v1)
 
 	server.Start(e, &server.Config{
 		Port:                cfg.Server.Port,

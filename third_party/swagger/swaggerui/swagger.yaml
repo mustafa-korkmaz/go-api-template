@@ -102,6 +102,19 @@ definitions:
         x-go-name: Username
     type: object
     x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger/auth
+  uploadRequest:
+    properties:
+      content:
+        items:
+          format: uint8
+          type: integer
+        type: array
+        x-go-name: Content
+      name:
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/mustafa-korkmaz/goapitemplate/third_party/swagger/upload
 host: localhost:1907
 info:
   contact:
@@ -177,7 +190,7 @@ paths:
           $ref: '#/responses/genericResponse'
       tags:
       - auth
-  /v1/olive/{id}:
+  /v1/olives/{id}:
     get:
       operationId: oliveGet
       parameters:
@@ -192,8 +205,8 @@ paths:
           $ref: '#/responses/genericResponse'
       summary: Returns olive details with given id.
       tags:
-      - olive
-  /v1/olive/count:
+      - olives
+  /v1/olives/count:
     get:
       description: Returns olive count stored so far
       operationId: oliveCount
@@ -201,7 +214,7 @@ paths:
         "200":
           $ref: '#/responses/genericResponse'
       tags:
-      - olive
+      - olives
   /v1/refresh:
     get:
       description: Returns new valid access_token and refresh_token
@@ -227,6 +240,22 @@ paths:
           $ref: '#/responses/genericResponse'
       tags:
       - auth
+  /v1/uploads:
+    post:
+      description: Saves the content
+      operationId: uploadPost
+      parameters:
+      - description: uploadRequest POST request body.
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/uploadRequest'
+        x-go-name: Body
+      responses:
+        "200":
+          $ref: '#/responses/genericResponse'
+      tags:
+      - uploads
   /v2/healthcheck/{value}:
     get:
       operationId: healthcheckGetV2
