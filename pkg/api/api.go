@@ -49,7 +49,7 @@ func Start(cfg *config.Configuration) error {
 	at.New(auth.New(jwt, dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
 	hct.New(healthcheck.New(), v1, v2)
 	ot.New(olive.New(dbClient, cfg.Db.Name), jwt.MWFunc(), v1)
-	ut.New(upload.New(), jwt.MWFunc(), v1)
+	ut.New(upload.New(), v1)
 
 	server.Start(e, &server.Config{
 		Port:                cfg.Server.Port,

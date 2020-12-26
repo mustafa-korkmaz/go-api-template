@@ -34,8 +34,7 @@ type CustomValidator struct {
 // New instantates new Echo server
 func New() *echo.Echo {
 	e := echo.New()
-	e.Use(middleware.LoggerWithConfig(loggerConfig), middleware.Recover(),
-		secure.CORS(), secure.Headers())
+	e.Use(middleware.LoggerWithConfig(loggerConfig), middleware.Recover(), secure.CORS(), secure.Headers())
 	e.GET("/", welcome)
 	e.Validator = &CustomValidator{V: validator.New()}
 	custErr := &customErrHandler{e: e}

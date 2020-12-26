@@ -13,13 +13,13 @@ type HTTP struct {
 	svc upload.Service
 }
 
-// New creates new olive http service with valid api versions
-func New(svc upload.Service, mw echo.MiddlewareFunc, groups ...*echo.Group) {
+// New creates new upload http service with valid api versions
+func New(svc upload.Service, groups ...*echo.Group) {
 	h := HTTP{svc}
 	v1 := groups[0].Group("/uploads")
 
 	//define /V1/uploads methods
-	v1.POST("", h.save, mw)
+	v1.POST("", h.save)
 }
 
 func (h *HTTP) save(c echo.Context) error {

@@ -1,7 +1,7 @@
 database:
   log_queries: true
   timeout_seconds: 5
-  conn: mongodb://localhost:27017
+  conn: mongodb+srv://mute:Mute1907@cluster0.lsfls.mongodb.net/mute?retryWrites=true&w=majority # mongodb://localhost:27017
   name: mute
 
 server:
@@ -22,4 +22,4 @@ application:
   swagger_ui_path: third_party/swagger/swaggerui
 
 logging:
-    log_req_resp_body: true
+    log_req_resp_body: false

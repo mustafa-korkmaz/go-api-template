@@ -30,14 +30,14 @@ func getConfigPath() string {
 		return ""
 	}
 
-	path := dir + "./cmd/api/config/conf."
+	path := dir + "/cmd/api/config/conf."
 	args := os.Args
 
 	if len(args) > 1 {
 		if args[1] == "debug" {
 			//command line arg is 'debug' on debug
 			//wd is different so directly return below
-			return dir + "./config/conf.dev.yaml"
+			return dir + "/config/conf.dev.yaml"
 		}
 
 		if args[1] == "prod" {

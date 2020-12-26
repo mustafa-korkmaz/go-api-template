@@ -1,7 +1,7 @@
 package secure
 
 import (
-	"regexp"
+	"unicode"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -9,9 +9,23 @@ import (
 // IsPasswordSecure checks whether password is secure enough
 func IsPasswordSecure(pass string) bool {
 
-	//min 8 chars, upper, lower, digit
-	matched, _ := regexp.Match(`^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$`, []byte(pass))
-	return matched
+	var (
+		hasMinLen  = false
+		hasNumber  = false
+		hasSpecial = false
+	)
+	if len(pass) >= 7 {
+		hasMinLen = true
+	}
+	for _, char := range pass {
+		switch {
+		case unicode.IsNumber(char):
+			hasNumber = true
+		case unicode.IsPunct(char) || unicode.IsSymbol(char):
+			hasSpecial = true
+		}
+	}
+	return hasMinLen && hasNumber && hasSpecial
 }
 
 // Hash hashes the password using bcrypt

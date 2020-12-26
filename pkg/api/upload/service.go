@@ -1,6 +1,10 @@
 package upload
 
 import (
+	"fmt"
+	"os"
+	"strings"
+
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/enum"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/request"
 	"github.com/mustafa-korkmaz/goapitemplate/pkg/viewmodel/response"
@@ -22,14 +26,23 @@ func (u *Upload) Save(model *request.Upload) *response.APIResponse {
 		Result: enum.ResponseResult.Fail,
 	}
 
-	// var count, err = o.repository.GetOlivesCount()
+	arr := strings.Split(model.Name, "/")
+	if len(arr) > 1 {
+		err := os.Mkdir(fmt.Sprintf("data/%s", arr[0]), 0750)
 
-	// if err != nil {
-	// 	apiResp.Message = "olives cannot found"
-	// 	return &apiResp
-	// }
+		check(err)
+	}
 
-	// apiResp.Data = count
+	err := os.Mkdir("data", 0750)
+	f, err := os.Create(fmt.Sprintf("data/%s", model.Name))
+	check(err)
+
+	defer f.Close()
+
+	length, err := f.Write(model.Content)
+	check(err)
+	fmt.Println(length, "bytes written successfully")
+
 	apiResp.Result = enum.ResponseResult.Success
 
 	return &apiResp
@@ -39,4 +52,10 @@ func (u *Upload) Save(model *request.Upload) *response.APIResponse {
 func New() *Upload {
 	var u = Upload{}
 	return &u
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
