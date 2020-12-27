@@ -26,14 +26,20 @@ func (u *Upload) Save(model *request.Upload) *response.APIResponse {
 		Result: enum.ResponseResult.Fail,
 	}
 
-	arr := strings.Split(model.Name, "/")
-	if len(arr) > 1 {
-		err := os.Mkdir(fmt.Sprintf("data/%s", arr[0]), 0750)
-
-		check(err)
+	if _, err := os.Stat("data"); os.IsNotExist(err) {
+		os.Mkdir("data", 0750)
 	}
 
-	err := os.Mkdir("data", 0750)
+	arr := strings.Split(model.Name, "/")
+	if len(arr) > 1 {
+
+		folder := fmt.Sprintf("data/%s", arr[0])
+		if _, err := os.Stat(folder); os.IsNotExist(err) {
+			err = os.MkdirAll(folder, 0750)
+			check(err)
+		}
+	}
+
 	f, err := os.Create(fmt.Sprintf("data/%s", model.Name))
 	check(err)
 
