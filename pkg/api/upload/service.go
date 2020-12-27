@@ -2,6 +2,7 @@ package upload
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -13,6 +14,7 @@ import (
 // Service represents healthcheck api interface
 type Service interface {
 	Save(*request.Upload) *response.APIResponse
+	Get(fileName string) *response.APIResponse
 }
 
 // Upload represents upload api service
@@ -48,6 +50,28 @@ func (u *Upload) Save(model *request.Upload) *response.APIResponse {
 	length, err := f.Write(model.Content)
 	check(err)
 	fmt.Println(length, "bytes written successfully")
+
+	apiResp.Result = enum.ResponseResult.Success
+
+	return &apiResp
+}
+
+// Get returns file content as byte []
+func (u *Upload) Get(fileName string) *response.APIResponse {
+
+	var apiResp = response.APIResponse{
+		Result: enum.ResponseResult.Fail,
+	}
+
+	fullPath := fmt.Sprintf("data/%s", fileName)
+
+	if _, err := os.Stat(fullPath); err == nil {
+		content, err := ioutil.ReadFile(fullPath)
+		check(err)
+		apiResp.Data = content
+	} else {
+		apiResp.ErrorCode = enum.ErrorCode.RecordNotFound
+	}
 
 	apiResp.Result = enum.ResponseResult.Success
 
